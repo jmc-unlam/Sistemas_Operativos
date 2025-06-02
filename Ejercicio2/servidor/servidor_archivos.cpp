@@ -89,33 +89,32 @@ int main() {
 
     // Bucle principal: aceptar conexiones
     while (keep_running) {
-        // Bloquea hasta que haya lugar
-        //sem_wait(&semaforo_max_clientes);
 
-        int client_fd;
-        client_fd = accept(server_fd, (struct sockaddr*)&address, (socklen_t*)&addrlen);
-        if (client_fd == -1) {
+        int* client_fd = new int;
+        *client_fd = accept(server_fd, (struct sockaddr*)&address, (socklen_t*)&addrlen);
+        if (*client_fd == -1) {
             continue;
         }
 
+        // Bloquea hasta que haya lugar
         if (sem_trywait(&semaforo_max_clientes) == 0) {
-            write(client_fd, "OK, Conexión Aceptada.\n", 24); // Envía READY al cliente
+            write(*client_fd, "OK, Conexión Aceptada.\n", 24); // Envía READY al cliente
             std::cout << "Cliente Aceptado." << std::endl;
 
             // Agregar cliente a la lista
             mutex_clientes.lock();
-            clientes.push_back(client_fd);
+            clientes.push_back(*client_fd);
             std::cout << "Clientes activos: " << clientes.size() << " / " << MAX_CLIENTS << std::endl;
             mutex_clientes.unlock();
 
             // Crear thread para atender al cliente
             pthread_t thread_id;
-            if (pthread_create(&thread_id, NULL, atender_cliente, &client_fd) != 0) {
+            if (pthread_create(&thread_id, NULL, atender_cliente, client_fd) != 0) {
                 std::cout << "Error al crear thread" << std::endl;
-                close(client_fd);
+                close(*client_fd);
 
                 mutex_clientes.lock();
-                clientes.remove(client_fd);
+                clientes.remove(*client_fd);
                 std::cout << "Clientes activos: " << clientes.size() << " / " << MAX_CLIENTS << std::endl;
                 mutex_clientes.unlock();
 
@@ -124,12 +123,11 @@ int main() {
                 pthread_detach(thread_id);
             }
         }  else {
-            write(client_fd, "ERROR, Conexión rechazada, Servidor ocupado.", 44); // Informa al cliente que el servidor está ocupado
+            write(*client_fd, "ERROR, Conexión rechazada, Servidor ocupado.", 44); // Informa al cliente que el servidor está ocupado
             std::cout << "Cliente rechazado, Servidor ocupado. Clientes activos: " << clientes.size() << " / " << MAX_CLIENTS << std::endl;
-            close(client_fd);
+            close(*client_fd);
         }
-
-        
+        delete client_fd;
     }
 
     //Libero los recursos
