@@ -1,0 +1,35 @@
+# Binarios de programas C++ (ejecutables)
+*.bin
+*.out
+*.exe 
+
+# Archivos de objetos compilados (intermedios)
+*.o
+*.obj
+
+# Archivos de depuración y bibliotecas estáticas/dinámicas
+*.gch # Archivos de cabecera precompilados
+*.d # Archivos de dependencia generados por Makefiles
+*.a # Bibliotecas estáticas (ej. libmylib.a)
+*.so # Bibliotecas dinámicas (ej. libmylib.so)
+*.dll # Bibliotecas dinámicas para Windows
+
+# Archivos de IDEs/Editores
+# Ignorar carpetas generadas por IDEs como VS Code, CLion, Eclipse, etc.
+.vscode/
+.idea/
+bin/  # Carpeta común para binarios compilados
+build/ # Carpeta común para compilaciones (ej. CMake)
+debug/ # Carpeta común para builds de depuración
+release/ # Carpeta común para builds de liberación
+
+# Archivos de configuración de compilación (si son generados)
+Makefile.local # Si tienes un Makefile específico de tu máquina
+
+# Archivos de log
+*.log
+
+# Archivos temporales
+*~
+*.bak
+*.tmp
