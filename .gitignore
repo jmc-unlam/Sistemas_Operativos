@@ -22,6 +22,7 @@ bin/  # Carpeta común para binarios compilados
 build/ # Carpeta común para compilaciones (ej. CMake)
 debug/ # Carpeta común para builds de depuración
 release/ # Carpeta común para builds de liberación
+almacen/
 
 # Archivos de configuración de compilación (si son generados)
 Makefile.local # Si tienes un Makefile específico de tu máquina
