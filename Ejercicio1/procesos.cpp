@@ -17,7 +17,7 @@
 // Estructura que contendrá el vector y los semáforos
 struct T_Dato_Compartido {
     int vector[VECTOR_SIZE];
-    sem_t semaforo_principal;                  // Semáforo principal (acceso al vector)
+    // sem_t semaforo_principal;                  // Semáforo principal (acceso al vector)
     sem_t semaforo_hijo[NUM_HIJOS];     // Un semáforo por hijo para sincronización
     bool seguir;
     int iteraciones;
@@ -88,17 +88,18 @@ int main() {
     datos->iteraciones = 0;
 
     // Inicializar semáforos anónimos en la memoria compartida
-    if (sem_init(&datos->semaforo_principal, 1, 1) == -1) {  // Semáforo principal, compartido entre procesos
-        perror("Error al inicializar semáforo principal");
-        exit(1);
-    }
+    // if (sem_init(&datos->semaforo_principal, 1, 1) == -1) {  // Semáforo principal, compartido entre procesos
+    //     perror("Error al inicializar semáforo principal");
+    //     exit(1);
+    // }
 
     for (int i = 0; i < NUM_HIJOS; ++i) {
         int valor_inicial = 0;
         if (i == 0) {
             valor_inicial = 1;
         }
-        if (sem_init(&datos->semaforo_hijo[i], 1, valor_inicial) == -1) {  // Cada hijo empieza bloqueado
+         // Cada hijo empieza bloqueado exepto el primero que empieza la secuencia
+        if (sem_init(&datos->semaforo_hijo[i], 1, valor_inicial) == -1) { 
             perror("Error al inicializar semáforo de hijo");
             exit(1);
         }
@@ -123,7 +124,7 @@ int main() {
                 if (!datos->seguir) break;
 
                 // Acceder al vector compartido
-                sem_wait(&datos->semaforo_principal);
+                // sem_wait(&datos->semaforo_principal);
 
                 // Realizar operación según el hijo
                 switch (i) {
@@ -160,7 +161,7 @@ int main() {
                 datos->iteraciones++;
 
                 // Liberar acceso al vector
-                sem_post(&datos->semaforo_principal);
+                // sem_post(&datos->semaforo_principal);
 
                 // Si no es el último hijo, liberar al siguiente
                 int siguiente_hijo = i + 1;
@@ -206,7 +207,7 @@ int main() {
     // Limpiar recursos
 
     // Destruir semáforos
-    sem_destroy(&datos->semaforo_principal);
+    // sem_destroy(&datos->semaforo_principal);
     for (int i = 0; i < NUM_HIJOS; ++i) {
         sem_destroy(&datos->semaforo_hijo[i]);
     }
