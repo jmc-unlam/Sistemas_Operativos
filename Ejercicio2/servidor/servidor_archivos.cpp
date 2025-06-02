@@ -111,12 +111,12 @@ int main() {
             pthread_t thread_id;
             if (pthread_create(&thread_id, NULL, atender_cliente, client_fd) != 0) {
                 std::cout << "Error al crear thread" << std::endl;
-                close(*client_fd);
 
                 mutex_clientes.lock();
                 clientes.remove(*client_fd);
                 std::cout << "Clientes activos: " << clientes.size() << " / " << MAX_CLIENTS << std::endl;
                 mutex_clientes.unlock();
+                delete client_fd;
 
                 sem_post(&semaforo_max_clientes);
             } else {
@@ -127,7 +127,6 @@ int main() {
             std::cout << "Cliente rechazado, Servidor ocupado. Clientes activos: " << clientes.size() << " / " << MAX_CLIENTS << std::endl;
             close(*client_fd);
         }
-        delete client_fd;
     }
 
     //Libero los recursos
@@ -147,7 +146,7 @@ int main() {
 // Manejar conexión de cliente
 void* atender_cliente(void* arg) {
     int client_fd = *(int*)arg;
-    //delete (int*)arg;
+    delete (int*)arg;
 
     char buffer[1024];
     ssize_t bytes_read;
@@ -250,7 +249,8 @@ void recibir_archivo(int client_fd, const char* filename) {
     } else {
         write(client_fd, "ERROR Tamaño incompleto\n", 25);
     }
-
+    delete[] file_buffer;
+    
     fclose(fp);
 }
 

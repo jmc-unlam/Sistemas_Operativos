@@ -31,9 +31,9 @@ while true; do
         # 4. USO DE RECURSOS
         echo -e "\n----- USO DE RECURSOS (Thread principal) -----"
         top -b -n 1 -H -p $SERVER_PID | head -n 12
+    else
+        echo "El servidor '$SERVER_NAME' no esta en ejecución."
     fi
-    
-    echo "El servidor '$SERVER_NAME' no esta en ejecución."
-    
+        
     sleep $INTERVAL
 done
