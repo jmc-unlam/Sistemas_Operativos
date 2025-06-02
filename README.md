@@ -1,5 +1,7 @@
 # Sistemas_Operativos
-Ejercicio 1: Sistema de procesamiento de datos en paralelo; esto lo haremos mediante un 
+
+# Ejercicio 1: 
+Sistema de procesamiento de datos en paralelo; esto lo haremos mediante un 
 vector compartido de 10 enteros inicializados en valores de múltiplos de 10, en el cual 
 aplicaremos distintas acciones por medio de procesos hijos. 
 Cada proceso hijo intentará modificar el vector compartido concurrentemente.
@@ -11,7 +13,8 @@ Una vez que todos los procesos hijos terminen de ejecutar sus respectivas accion
 el proceso padre se encargará de mostrar los resultados finales; 
 y por último se liberarán los recursos utilizados durante la ejecución del programa.
 
-Ejercicio 2: El servidor de archivos maneja múltiples clientes de forma concurrente. 
+# Ejercicio 2: 
+El servidor de archivos maneja múltiples clientes de forma concurrente. 
 Los clientes pueden subir, descargar y listar archivos almacenados en el servidor. 
 
 Servidor TCP concurrente:
