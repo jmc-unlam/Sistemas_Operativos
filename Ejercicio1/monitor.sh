@@ -75,9 +75,9 @@ ls -l /dev/shm/
 
 # Crear pipe y ejecutar el programa
 echo -e "\n=== Ejecutando el programa ==="
-mkfifo mypipe
-exec 3<>mypipe 
-./"$EXECUTABLE" < mypipe & 
+mkfifo mypipe.tmp
+exec 3<>mypipe.tmp 
+./"$EXECUTABLE" < mypipe.tmp & 
 PROGRAM_PID=$! 
 
 echo "PID del proceso principal: $PROGRAM_PID"
@@ -90,13 +90,13 @@ COUNT=0
 monitor
 
 echo "Terminando programa..."
-echo "" > mypipe
+echo "" > mypipe.tmp
 
 wait $PROGRAM_PID 2>/dev/null
 
 # Limpiar tubería
 exec 3>&-
-rm mypipe
+rm mypipe.tmp
 
 echo -e "\n=== Limpieza completada ==="
 
